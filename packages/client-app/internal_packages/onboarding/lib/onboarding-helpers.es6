@@ -179,17 +179,17 @@ export function accountInfoWithIMAPAutocompletions(existingAccountInfo) {
   }
 
   const defaults = {
-    imap_host: template.imap_host,
-    imap_port: template.imap_port || 993,
+    imap_host: template.imap_host || '127.0.0.1',
+    imap_port: template.imap_port || 1984,
     imap_username: usernameWithFormat(template.imap_user_format),
     imap_password: existingAccountInfo.password,
-    imap_security: template.imap_security || "SSL / TLS",
+    imap_security: template.imap_security || "none",
     imap_allow_insecure_ssl: template.imap_allow_insecure_ssl || false,
-    smtp_host: template.smtp_host,
-    smtp_port: template.smtp_port || 587,
+    smtp_host: template.smtp_host || '127.0.0.1',
+    smtp_port: template.smtp_port || 2013,
     smtp_username: usernameWithFormat(template.smtp_user_format),
     smtp_password: existingAccountInfo.password,
-    smtp_security: template.smtp_security || "STARTTLS",
+    smtp_security: template.smtp_security || "none",
     smtp_allow_insecure_ssl: template.smtp_allow_insecure_ssl || false,
   }
 
