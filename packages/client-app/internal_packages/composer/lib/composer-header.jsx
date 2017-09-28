@@ -332,6 +332,16 @@ export default class ComposerHeader extends React.Component {
           onShowAndFocusField={this.showAndFocusField}
         />
         {this._renderParticipants()}
+        <InjectedComponent
+          key="subject-wrap"
+          matching={{role: 'Composer:ParticipantsFooter'}}
+          exposedProps={{
+            draft: this.props.draft,
+            session: this.props.session,
+          }}
+          fallback={SubjectTextField}
+          onComponentDidChange={this.props.onNewHeaderComponents}
+        />
         {this._renderSubject()}
       </div>
     )
