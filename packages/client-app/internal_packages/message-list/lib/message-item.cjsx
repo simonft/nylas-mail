@@ -104,7 +104,7 @@ class MessageItem extends React.Component
       "pending": @props.pending
 
     <header ref="header" className={classes} onClick={@_onClickHeader}>
-      <InjectedComponent
+      <InjectedComponentSet
         matching={{role: "MessageHeader"}}
         exposedProps={{message: @props.message, thread: @props.thread, messages: @props.messages}}
       />
