@@ -40,6 +40,7 @@ class DraftStore extends NylasStore {
     this.listenTo(Actions.composeReply, this._onComposeReply);
     this.listenTo(Actions.composeForward, this._onComposeForward);
     this.listenTo(Actions.composePopoutDraft, this._onPopoutDraftClientId);
+    this.listenTo(Actions.composeNewDraft, this._onPopoutNewDraft);
     this.listenTo(Actions.composeNewBlankDraft, this._onPopoutBlankDraft);
     this.listenTo(Actions.composeNewDraftToRecipient, this._onPopoutNewDraftToRecipient);
     this.listenTo(Actions.draftDeliveryFailed, this._onSendDraftFailed);
@@ -277,6 +278,17 @@ class DraftStore extends NylasStore {
     const timerId = Utils.generateTempId()
     NylasEnv.timer.start(`open-composer-window-${timerId}`);
     return DraftFactory.createDraft({to: [contact]}).then((draft) => {
+      return this._finalizeAndPersistNewMessage(draft).then(({draftClientId}) => {
+        return this._onPopoutDraftClientId(draftClientId, {timerId, newDraft: true});
+      });
+    });
+  }
+
+  _onPopoutNewDraft = (fields) => {
+    // Actions.recordUserEvent("Draft Created", {type: "new"});
+    const timerId = Utils.generateTempId()
+    NylasEnv.timer.start(`open-composer-window-${timerId}`);
+    return DraftFactory.createDraft(fields).then((draft) => {
       return this._finalizeAndPersistNewMessage(draft).then(({draftClientId}) => {
         return this._onPopoutDraftClientId(draftClientId, {timerId, newDraft: true});
       });

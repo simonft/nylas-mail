@@ -391,7 +391,19 @@ class Actions {
   static composeNewBlankDraft = ActionScopeWindow;
 
   /*
-  Public: Open a new composer window for a new draft addressed to the given recipient
+  Public: Open a new composer window for creating a new draft, with
+  options to set initial field values.
+
+  *Scope: Window*
+
+  ```
+  Actions.composeNewDraft(fields)
+  ```
+  */
+  static composeNewDraft = ActionScopeWindow;
+
+  /*
+  Public: Open a new composer window for a new draft
 
   *Scope: Window*
 
