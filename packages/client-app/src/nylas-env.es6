@@ -243,9 +243,9 @@ export default class NylasEnvConstructor {
     // the window starts loading.
     require('nylas-exports');
 
-    process.title = `Nylas Mail ${this.getWindowType()}`;
+    process.title = `Rewire Mail ${this.getWindowType()}`;
     return this.onWindowPropsReceived(() => {
-      process.title = `Nylas Mail ${this.getWindowType()}`;
+      process.title = `Rewire Mail ${this.getWindowType()}`;
       return process.title;
     });
   }

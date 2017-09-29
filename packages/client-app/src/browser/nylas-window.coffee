@@ -47,7 +47,7 @@ class NylasWindow
 
     browserWindowOptions =
       show: false
-      title: title ? 'Nylas Mail'
+      title: title ? 'Rewire Mail'
       frame: frame
       width: width
       height: height
@@ -192,7 +192,7 @@ class NylasWindow
       chosen = dialog.showMessageBox @browserWindow,
         type: 'warning'
         buttons: ['Close', 'Keep Waiting']
-        message: 'Nylas Mail is not responding'
+        message: 'Rewire Mail is not responding'
         detail: 'Would you like to force close it or keep waiting?'
       @browserWindow.destroy() if chosen is 0
 
@@ -211,8 +211,8 @@ class NylasWindow
         chosen = dialog.showMessageBox @browserWindow,
           type: 'warning'
           buttons: ['Close Window', 'Reload', 'Keep It Open']
-          message: 'Nylas Mail has crashed'
-          detail: 'Please restart Nylas Mail.'
+          message: 'Rewire Mail has crashed'
+          detail: 'Please restart Rewire Mail.'
         switch chosen
           when 0 then @browserWindow.destroy()
           when 1 then @browserWindow.reload()

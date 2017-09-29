@@ -16,11 +16,11 @@ class KeyManager {
      * the names of these keys. If you change them be sure that old N1 is
      * fully deprecated or updated as well.
      */
-    this.SERVICE_NAME = "Nylas Mail";
+    this.SERVICE_NAME = "Rewire Mail";
     if (NylasEnv.inDevMode()) {
-      this.SERVICE_NAME = "Nylas Mail Dev";
+      this.SERVICE_NAME = "Rewire Mail Dev";
     }
-    this.KEY_NAME = "Nylas Mail Keys"
+    this.KEY_NAME = "Rewire Mail Keys"
     this._alreadyMigrated = new Set()
   }
 

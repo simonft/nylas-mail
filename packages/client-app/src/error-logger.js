@@ -118,8 +118,8 @@ module.exports = ErrorLogger = (function() {
 
   ErrorLogger.prototype._startCrashReporter = function(args) {
     crashReporter.start({
-      productName: 'Nylas Mail',
-      companyName: 'Nylas',
+      productName: 'Rewire Mail',
+      companyName: 'Rewire',
       submitURL: 'https://electron-crash-report-server.herokuapp.com/',
       autoSubmit: true,
     })
