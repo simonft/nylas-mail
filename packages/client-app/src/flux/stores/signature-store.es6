@@ -2,7 +2,7 @@ import {Utils, Actions, AccountStore} from 'nylas-exports';
 import NylasStore from 'nylas-store'
 import _ from 'underscore'
 
-const DefaultSignatureText = "Sent from <a href=\"https://nylas.com?ref=n1\">Nylas Mail</a>, the best free email app for work";
+const DefaultSignatureText = "Sent with <a href=\"https://rewire.co?ref=n1\">Rewire</a>. Easily protect your email communications with end-to-end encryption.";
 
 class SignatureStore extends NylasStore {
 
