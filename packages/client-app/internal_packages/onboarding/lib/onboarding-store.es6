@@ -39,7 +39,7 @@ class OnboardingStore extends NylasStore {
     if (existingAccount) {
       // Used when re-adding an account after re-connecting
       const existingAccountType = accountTypeForProvider(existingAccount.provider);
-      this._pageStack = ['account-choose']
+      this._pageStack = ['account-settings']
       this._accountInfo = {
         name: existingAccount.name,
         email: existingAccount.emailAddress,
@@ -47,7 +47,7 @@ class OnboardingStore extends NylasStore {
       this._onSetAccountType(existingAccountType);
     } else if (addingAccount) {
       // Adding a new, unknown account
-      this._pageStack = ['account-choose'];
+      this._pageStack = ['account-settings'];
       if (accountType) {
         this._onSetAccountType(accountType);
       }

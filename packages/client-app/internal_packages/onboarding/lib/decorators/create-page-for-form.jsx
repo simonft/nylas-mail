@@ -214,7 +214,7 @@ const CreatePageForForm = (FormComponent) => {
 
     render() {
       const {accountInfo, errorMessage, errorStatusCode, errorFieldNames, submitting} = this.state;
-      const AccountType = AccountTypes.find(a => a.type === accountInfo.type);
+      const AccountType = 'imap-settings';
 
       if (!AccountType) {
         throw new Error(`Cannot find account type ${accountInfo.type}`);
@@ -226,8 +226,8 @@ const CreatePageForForm = (FormComponent) => {
         <div className={`page account-setup ${FormComponent.displayName}`}>
           <div className="logo-container">
             <RetinaImg
-              style={{backgroundColor: AccountType.color, borderRadius: 44}}
-              name={AccountType.headerIcon}
+              style={{height: 100}}
+              url="nylas://onboarding/assets/rewire-logo.png"
               mode={RetinaImg.Mode.ContentPreserve}
               className="logo"
             />
