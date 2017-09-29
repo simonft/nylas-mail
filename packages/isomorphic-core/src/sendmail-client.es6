@@ -1,5 +1,6 @@
 /* eslint no-useless-escape: 0 */
 import nodemailer from 'nodemailer'
+import {htmlToText} from 'nodemailer-html-to-text'
 import {APIError} from './errors'
 import {convertSmtpError} from './smtp-errors'
 import {getMailerPayload, buildMime} from './message-utils'
@@ -11,6 +12,7 @@ class SendmailClient {
   constructor(account, logger) {
     this._smtpConfig = account.smtpConfig()
     this._transporter = nodemailer.createTransport(Object.assign(this._smtpConfig, {pool: true}));
+    this._transporter.use('compile', htmlToText())
     this._logger = logger;
   }
 
