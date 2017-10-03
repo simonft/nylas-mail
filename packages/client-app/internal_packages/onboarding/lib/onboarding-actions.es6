@@ -2,7 +2,6 @@ import Reflux from 'reflux';
 
 const OnboardingActions = Reflux.createActions([
   "setAccountInfo",
-  "setAccountType",
   "moveToPreviousPage",
   "moveToPage",
   "authenticationJSONReceived",

@@ -5,23 +5,13 @@ import OnboardingStore from './onboarding-store';
 import PageTopBar from './page-top-bar';
 
 import WelcomePage from './page-welcome';
-import AccountChoosePage from './page-account-choose';
 import AccountSettingsPage from './page-account-settings';
-import AccountSettingsPageGmail from './page-account-settings-gmail';
-import AccountSettingsPageIMAP from './page-account-settings-imap';
-import AccountOnboardingSuccess from './page-account-onboarding-success';
-import AccountSettingsPageExchange from './page-account-settings-exchange';
 import InitialPreferencesPage from './page-initial-preferences';
 
 
 const PageComponents = {
   "welcome": WelcomePage,
-  "account-choose": AccountChoosePage,
   "account-settings": AccountSettingsPage,
-  "account-settings-gmail": AccountSettingsPageGmail,
-  "account-settings-imap": AccountSettingsPageIMAP,
-  "account-settings-exchange": AccountSettingsPageExchange,
-  "account-onboarding-success": AccountOnboardingSuccess,
   "initial-preferences": InitialPreferencesPage,
 }
 
@@ -88,7 +78,7 @@ export default class OnboardingRoot extends React.Component {
       <div className="page-frame">
         <PageTopBar
           pageDepth={this.state.pageDepth}
-          allowMoveBack={!['initial-preferences', 'account-choose'].includes(this.state.page)}
+          allowMoveBack={!('initial-preferences' === this.state.page)}
         />
         <ReactCSSTransitionGroup
           transitionName="alpha-fade"

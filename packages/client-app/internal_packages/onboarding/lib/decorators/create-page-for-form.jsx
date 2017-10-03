@@ -7,7 +7,6 @@ import {NylasAPI, Actions} from 'nylas-exports';
 import OnboardingActions from '../onboarding-actions';
 import {runAuthRequest} from '../onboarding-helpers';
 import FormErrorMessage from '../form-error-message';
-import AccountTypes from '../account-types'
 
 const CreatePageForForm = (FormComponent) => {
   return class Composed extends React.Component {
@@ -108,7 +107,6 @@ const CreatePageForForm = (FormComponent) => {
 
       runAuthRequest(accountInfo, reqOptions)
       .then((json) => {
-        OnboardingActions.moveToPage('account-onboarding-success')
         OnboardingActions.accountJSONReceived(json, json.localToken, json.cloudToken)
       })
       .catch((err) => {

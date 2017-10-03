@@ -4,16 +4,6 @@ import NylasStore from 'nylas-store';
 
 import OnboardingActions from './onboarding-actions';
 
-function accountTypeForProvider(provider) {
-  if (provider === 'eas') {
-    return 'exchange';
-  }
-  if (provider === 'custom') {
-    return 'imap';
-  }
-  return provider;
-}
-
 class OnboardingStore extends NylasStore {
   constructor() {
     super();
@@ -23,34 +13,12 @@ class OnboardingStore extends NylasStore {
     this.listenTo(OnboardingActions.accountJSONReceived, this._onAccountJSONReceived)
     this.listenTo(OnboardingActions.authenticationJSONReceived, this._onAuthenticationJSONReceived)
     this.listenTo(OnboardingActions.setAccountInfo, this._onSetAccountInfo);
-    this.listenTo(OnboardingActions.setAccountType, this._onSetAccountType);
-    ipcRenderer.on('set-account-type', (e, type) => {
-      if (type) {
-        this._onSetAccountType(type)
-      } else {
-        this._pageStack = ['account-choose']
-        this.trigger()
-      }
-    })
 
     const {existingAccount, addingAccount, accountType} = NylasEnv.getWindowProps();
     this._accountInfo = {};
 
-    if (existingAccount) {
-      // Used when re-adding an account after re-connecting
-      const existingAccountType = accountTypeForProvider(existingAccount.provider);
-      this._pageStack = ['account-settings']
-      this._accountInfo = {
-        name: existingAccount.name,
-        email: existingAccount.emailAddress,
-      };
-      this._onSetAccountType(existingAccountType);
-    } else if (addingAccount) {
-      // Adding a new, unknown account
+    if (existingAccount || addingAccount) {
       this._pageStack = ['account-settings'];
-      if (accountType) {
-        this._onSetAccountType(accountType);
-      }
     } else {
       // Standard new user onboarding flow.
       this._pageStack = ['welcome'];
@@ -66,24 +34,6 @@ class OnboardingStore extends NylasStore {
     setTimeout(() => {
       ipcRenderer.send('account-setup-successful');
     }, 100);
-  }
-
-  _onSetAccountType = (type) => {
-    let nextPage = "account-settings";
-    if (type === 'gmail') {
-      nextPage = "account-settings-gmail";
-    } else if (type === 'exchange') {
-      nextPage = "account-settings-exchange";
-    }
-
-    Actions.recordUserEvent('Selected Account Type', {
-      provider: type,
-    });
-
-    // Don't carry over any type-specific account information
-    const {email, name, password} = this._accountInfo;
-    this._onSetAccountInfo({email, name, password, type});
-    this._onMoveToPage(nextPage);
   }
 
   _onSetAccountInfo = (info) => {
