@@ -15,17 +15,18 @@ class AccountBasicSettingsForm extends React.Component {
     accountInfo: React.PropTypes.object,
     errorFieldNames: React.PropTypes.array,
     submitting: React.PropTypes.bool,
+    setErrorMessage: React.PropTypes.func,
     onConnect: React.PropTypes.func,
     onFieldChange: React.PropTypes.func,
     onFieldKeyPress: React.PropTypes.func,
   };
 
   static submitLabel = (accountInfo) => {
-    return (accountInfo.type === 'imap') ? 'Continue' : 'Connect Account';
+    return 'Sign In';
   }
 
   static titleLabel = (AccountType) => {
-    return AccountType.title || `Add your Rewire account`;
+    return AccountType.title || `Sign in to your Rewire account`;
   }
 
   static subtitleLabel = () => {
@@ -58,6 +59,7 @@ class AccountBasicSettingsForm extends React.Component {
   }
 
   submit() {
+    this.props.onConnect();
     let accountInfo = {
       email: this.props.accountInfo.email,
       type: "imap",
@@ -73,25 +75,26 @@ class AccountBasicSettingsForm extends React.Component {
       smtp_security: "none",
       smtp_allow_insecure_ssl: true,
     };
-    console.log("here");
     bitmask.bonafide.user.auth(this.props.accountInfo.email, this.props.accountInfo.password, true).then(
       (response) => {
-        console.log("response")
-        console.log(response);
         bitmask.mail.get_token(this.props.accountInfo.email).then((response) => {
           accountInfo.imap_password = response.token;
           accountInfo.smtp_password = response.token;
           const reqOptions = {};
-          console.log(response);
           runAuthRequest(accountInfo, reqOptions)
             .then((json) => {
-              console.log(json);
               OnboardingActions.setAccountInfo(accountInfo);
               OnboardingActions.accountJSONReceived(json, json.localToken, json.cloudToken)
             })
         })
       }
-    );
+    ).catch((error) => {
+      if (error === "") {
+        this.props.setErrorMessage("An unknown error occured");
+        return;
+      }
+      this.props.setErrorMessage(error);
+    });
   }
 
   render() {

@@ -24,6 +24,8 @@ const CreatePageForForm = (FormComponent) => {
         errorFieldNames: [],
         errorMessage: null,
       }, FormComponent.validateAccountInfo(this.props.accountInfo));
+
+      this.setErrorMessage = this.setErrorMessage.bind(this);
     }
 
     componentDidMount() {
@@ -57,6 +59,10 @@ const CreatePageForForm = (FormComponent) => {
     _isValid() {
       const {populated, errorFieldNames} = this.state
       return errorFieldNames.length === 0 && populated
+    }
+
+    setErrorMessage = (message) => {
+      this.setState({submitting: false, errorMessage: message});
     }
 
     onFieldChange = (event) => {
@@ -105,7 +111,7 @@ const CreatePageForForm = (FormComponent) => {
         reqOptions.forceTrustCertificate = true
       }
 
-      runAuthRequest(accountInfo, reqOptions)
+    runAuthRequest(accountInfo, reqOptions)
       .then((json) => {
         OnboardingActions.accountJSONReceived(json, json.localToken, json.cloudToken)
       })
@@ -242,6 +248,7 @@ const CreatePageForForm = (FormComponent) => {
             accountInfo={accountInfo}
             errorFieldNames={errorFieldNames}
             submitting={submitting}
+            setErrorMessage={this.setErrorMessage}
             onFieldChange={this.onFieldChange}
             onFieldKeyPress={this.onFieldKeyPress}
             onConnect={this.onConnect}
