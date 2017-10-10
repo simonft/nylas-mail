@@ -1,0 +1,19 @@
+{
+  "name": "bitmask",
+  "main": "./lib/main",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "nylas": ">=2.1.0"
+  },
+  "windowTypes": {
+    "default": true,
+    "composer": true
+  },
+  "description": "Enter a description of your package!",
+  "dependencies": {},
+  "license": "MIT"
+}

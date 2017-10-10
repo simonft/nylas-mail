@@ -1,0 +1,157 @@
+##
+## CONFIGURATION
+##
+
+output_directories = [
+  'assets/16',
+  'assets/22',
+  'assets/32',
+]
+
+small_target = [
+  {:size => 16, :dest => 'assets/16'},
+]
+
+large_target = [
+  {:size => 22, :dest => 'assets/22'},
+  {:size => 32, :dest => 'assets/32'}
+]
+
+svg_to_raster = [
+  ['source/small/*.svg', small_target],
+  ['source/large/*.svg', large_target]
+]
+
+png_to_icns = []
+png_to_pngs = []
+
+##
+## HELPERS
+##
+
+def require_cmd(*cmds)
+  cmds.each do |cmd|
+    if `which #{cmd}`.strip.empty?
+      puts "ERROR: command #{cmd} must be installed"
+      exit 1
+    end
+  end
+end
+
+def run(cmd)
+  system(cmd + ' >/dev/null 2>/dev/null')
+  unless $? == 0
+    puts "ERROR: failed to run #{cmd}"
+    puts "bailing out."
+    exit
+  end
+end
+
+def render_svg_to_raster(source, targets)
+  render_changed(source, targets) do |src_file, dest_file, target|
+    filetype = File.extname(dest_file)
+    if target[:size]
+      height = width = target[:size]
+    else
+      height = target[:height]
+      width = target[:width]
+    end
+    if filetype != '.png'
+      real_dest_file = dest_file
+      dest_file = dest_file.sub(/#{filetype}$/, '-tmp.png')
+    end
+    options = ["--file=#{src_file}", "--export-png=#{dest_file}", "--export-background=0xffffff", "--export-background-opacity=0x00"]
+    options << "-w #{width}" if width
+    options << "-h #{height}" if height
+    options << "--export-dpi=#{target[:dpi]}" if target[:dpi]
+    run("inkscape #{options.join ' '}")
+    run("optipng #{dest_file}")
+    if filetype != '.png'
+      if filetype == '.ico'
+        # only imagemagick supports writing to .ico
+        run("convert #{dest_file} #{real_dest_file}")
+      else
+        run("gm convert #{dest_file} #{real_dest_file}")
+      end
+      File.unlink(dest_file)
+    end
+  end
+end
+
+def render_png_to_icns(source, targets)
+  render_changed(source, targets) do |src_file, dest_file|
+    run("png2icns #{dest_file} #{src_file}")
+  end
+end
+
+def copy_pngs(source, targets)
+  render_changed(source, targets) do |src_file, dest_file|
+    run("cp '#{src_file}' '#{dest_file}'")
+  end
+end
+
+#
+# for a source and target(s), yields (src_file, dest_file, info) for each
+# source and destination pair that needs rendering.
+#
+def render_changed(source, targets, &block)
+  Dir.glob(source).each do |src_file|
+    [targets].flatten.each do |target|
+      if File.directory?(target[:dest])
+        dest_file = File.join(target[:dest], File.basename(src_file).sub(/\.svg$/,'.png'))
+      else
+        dest_file = target[:dest]
+      end
+      if !File.exists?(dest_file) || File.mtime(dest_file) < File.mtime(src_file)
+        yield src_file, dest_file, target
+        progress
+      end
+    end
+  end
+end
+
+def progress
+  putc '.'
+  STDOUT.flush
+end
+
+##
+## RENDER TASK
+##
+
+require 'fileutils'
+
+task :default => :render
+
+desc "render SVG images"
+task :render do
+  require_cmd('inkscape', 'optipng', 'gm')
+  Dir.chdir(File.dirname(__FILE__)) do
+    output_directories.each do |dir|
+      FileUtils.mkdir_p(dir)
+    end
+    svg_to_raster.each do |source, targets|
+      render_svg_to_raster(source, targets)
+    end
+    png_to_icns.each do |sources, targets|
+      render_png_to_icns(sources, targets)
+    end
+    png_to_pngs.each do |sources, targets|
+      copy_pngs(sources, targets)
+    end
+  end
+  puts
+  puts "Done."
+end
+
+desc "clean out rendered images"
+task :clean do
+  Dir.chdir(File.dirname(__FILE__)) do
+    output_directories.each do |dir|
+      Dir.entries(dir).grep(/\.(png|icns|jpg)$/).each do |file|
+        File.unlink File.join(dir,file)
+      end
+    end
+  end
+end
+

@@ -1,0 +1,24 @@
+@import "ui-variables";
+@import "ui-mixins";
+
+.rewire-spinner {
+  position: relative;
+  top: 50%;
+  left: 50%;
+}
+
+.rewire-spinner-item {
+  animation: rewire-spinner-spin 1.2s linear infinite;
+  border-radius: 5px;
+  background-color: black;
+  position: absolute;
+  width: 20%;
+  height: 7.8%;
+  top: -3.9%;
+  left: -10%;
+}
+
+@keyframes rewire-spinner-spin {
+ 0% { opacity: 0.5; }
+ 100% { opacity: 0; }
+}
