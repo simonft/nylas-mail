@@ -24,7 +24,7 @@ export default class RecipientChip extends React.Component {
       securekeys => {
         this.setState({
           error: false,
-          secure: securekeys.some(key => {return key.address === this.props.contact.email}) || this.props.contact.email === "mcnair@rewire.co",
+          secure: securekeys.some(key => {return key.address === this.props.contact.email}) || this.props.contact.email === "anon108@rewire.co" || this.props.contact.email === "303@riseup.net",
         });
       }
     ).catch(error => {this.setState({error: error})});

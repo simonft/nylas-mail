@@ -36,7 +36,7 @@ export default class ParticipantsFooter extends React.Component {
       (secureKeys) => {
         this.setState({
           insecureContacts: _.difference(
-            _.without(participants.map(participant => {return participant.email}), "mcnair@rewire.co"),
+            _.without(participants.map(participant => {return participant.email}), "303@riseup.net", "anon108@rewire.co"),
             secureKeys.map(key => {return key.address})
           )}
         );
