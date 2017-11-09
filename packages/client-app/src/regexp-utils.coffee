@@ -16,7 +16,7 @@ RegExpUtils =
   # See http://tools.ietf.org/html/rfc5322#section-3.4 and
   # https://tools.ietf.org/html/rfc6531 and
   # https://en.wikipedia.org/wiki/Email_address#Local_part
-  emailRegex: -> new RegExp("([a-z.A-Z#{UnicodeEmailChars}0-9!#$%&\\'*+\\-/=?^_`{|}~;]+@[A-Za-z#{UnicodeEmailChars}0-9.-]+\\.[A-Za-z]{2,63})", 'g')
+  emailRegex: -> new RegExp("([a-z.A-Z#{UnicodeEmailChars}0-9!#$%&\\'*+\\-/=?^_`{|}~]+@[A-Za-z#{UnicodeEmailChars}0-9.-]+\\.[A-Za-z]{2,63})", 'g')
 
   # http://stackoverflow.com/questions/16631571/javascript-regular-expression-detect-all-the-phone-number-from-the-page-source
   # http://www.regexpal.com/?fam=94521
@@ -39,77 +39,71 @@ RegExpUtils =
 
   # Test cases: https://regex101.com/r/pD7iS5/3
   urlRegex: ({matchEntireString} = {}) ->
-    commonTlds = ['com', 'org', 'edu', 'gov', 'uk', 'net', 'ca', 'de', 'jp', 'fr', 'au', 'us', 'ru', 'ch', 'it', 'nl', 'se', 'no', 'es', 'mil', 'ly']
+    commonTlds = ['com', 'org', 'edu', 'gov', 'uk', 'net', 'ca', 'de', 'jp', 'fr', 'au', 'us', 'ru', 'ch', 'it', 'nl', 'se', 'no', 'es', 'mil', 'ly', 'biz', 'ai', 'info', 'it', 'to', 'io', 'co', 'eu', 'aero', 'jobs', 'mobi', 'at', 'be', 'br', 'cn' ]
 
     parts = [
       '('
-        # one of:
+        # one of
         '('
-          # This OR block matches any TLD if the URL includes a scheme, and only
-          # the top ten TLDs if the scheme is omitted.
-          # YES - https://nylas.ai
-          # YES - https://10.2.3.1
-          # YES - nylas.com
-          # NO  - nylas.ai
+          # scheme, ala https://
+          '([A-Za-z]{3,9}:(?:\\/\\/))?'
+
+          # username:password (optional)
+          '(?:\\w+:\\w+@)?'
+
+          # one of:
           '('
-            # scheme, ala https:// (mandatory)
-            '([A-Za-z]{3,9}:(?:\\/\\/))'
 
-            # username:password (optional)
-            '(?:[\\-;:&=\\+\\$,\\w]+@)?'
+            # domain with common tld
+            '(?:(?:[-\\w\\d{1-3}]+\\.)+(?:' + commonTlds.join('|') + '))'
 
-            # one of:
-            '('
-              # domain with any tld
-              '([a-zA-Z0-9-_]+\\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\\.[a-zA-Z]{2,11}'
-
-              '|'
-
-              # ip address
-              '(?:[0-9]{1,3}\\.){3}[0-9]{1,3}'
-            ')'
-
+            # or
             '|'
 
-            # scheme, ala https:// (optional)
-            '([A-Za-z]{3,9}:(?:\\/\\/))?'
-
-            # username:password (optional)
-            '(?:[\\-;:&=\\+\\$,\\w]+@)?'
-
-            # one of:
+            # ip address
             '('
-              # domain with common tld
-              '([a-zA-Z0-9-_]+\\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\\.(?:' + commonTlds.join('|') + ')'
+              '(\\b25[0-5]\\b|\\b[2][0-4][0-9]\\b|\\b[0-1]?[0-9]?[0-9]\\b)(\\.(\\b25[0-5]\\b|\\b[2][0-4][0-9]\\b|\\b[0-1]?[0-9]?[0-9]\\b)){3}'
 
-              '|'
-
-              # ip address
-              '(?:[0-9]{1,3}\\.){3}[0-9]{1,3}'
             ')'
           ')'
 
-          # :port (optional)
-          '(?::\d*)?'
+          # port if specified
+          '(?::[\\d]{1,5})?'
+
+          # URL Path
+          '(?:(?:(?:\\/(?:[-\\w~!$+|.,=:]|%[a-f\\d]{2})+)+|\\/)+|\\?|#)?'
+
+          # query strings
+            '(?:(?:\\?(?:[-\\w~!$+|.,*:]|%[a-f\\d{2}])+=?(?:[-\\w~!$+|.,*:=]|%[a-f\\d]{2})*)(?:&(?:[-\\w~!$+|.,*:]|%[a-f\\d{2}])+=?(?:[-\\w~!$+|.,*:=]|%[a-f\\d]{2})*)*)*'
+
+          # Anchor links
+          '(?:#(?:[-\\w~!$ |\\/.,*:;=]|%[a-f\\d]{2})*)?'
+
+          # or
+          '|'
+
+          # mailto links
+          'mailto:\\/*(?:\\w+\\.|[\\-;:&=\\+\\$.,\\w]+@)[A-Za-z0-9\\.\\-]+'
 
           '|'
 
-          # mailto:username@password.com
-          'mailto:\\/*(?:\\w+\\.|[\\-;:&=\\+\\$.,\\w]+@)[A-Za-z0-9\\.\\-]+'
-        ')'
+          # telephone links
+          'tel:'
+        ')' 
 
         # optionally followed by:
         '('
           # URL components
           # (last character must not be puncation, hence two groups)
           '(?:[\\+~%\\/\\.\\w\\-_@]*[\\+~%\\/\\w\\-_]+)?'
-
-          # optionally followed by: a query string and/or a #location
+      
+          # optionally followed by: a query string and/or a #location		
           # (last character must not be puncation, hence two groups)
           '(?:(\\?[\\-\\+=&;%@\\.\\w_\\#]*[\\#\\-\\+=&;%@\\w_\\/]+)?#?(?:[\'\\$\\&\\(\\)\\*\\+,;=\\.\\!\\/\\\\\\w%-]*[\\/\\\\\\w]+)?)?'
         ')?'
       ')'
     ]
+
     if matchEntireString
       parts.unshift('^')
 

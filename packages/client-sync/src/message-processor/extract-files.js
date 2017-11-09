@@ -9,7 +9,13 @@ function collectFilesFromStruct({db, messageValues, struct, fileIds = new Set()}
       collected = collected.concat(collectFilesFromStruct({db, messageValues, struct: part, fileIds}));
     } else {
       const disposition = part.disposition || {}
-      const filename = mimelib.decodeMimeWord((disposition.params || {}).filename);
+
+      // Filename should be usually present in Content-Disposition header field,
+      // but we can take name in Content-Type as a fallback.
+      const encodedFilename = (disposition.params || {}).filename || (part.params || {}).name;
+
+      // Filename can consist of multiple encoded-words
+      const filename = mimelib.parseMimeWords(encodedFilename);
 
       // Note that the contentId is stored in part.id, while the MIME part id
       // is stored in part.partID
@@ -20,6 +26,7 @@ function collectFilesFromStruct({db, messageValues, struct, fileIds = new Set()}
       // to ensure that there is a filename and contentId because some clients
       // use "inline" for text in the body.
       const isAttachment = /(attachment)/gi.test(disposition.type) ||
+        /(calendar)/gi.test(part.subtype) ||
         (/(inline)/gi.test(disposition.type) && filename && contentId);
 
       if (!isAttachment) continue

@@ -1,5 +1,31 @@
 # Nylas Mail Changelog
 
+### 2.2.2 (11/07/2017)
+
+  + Enable Keybase Plugin (PR #126)
+  + Custom IMAP/SMTP Ports (PR #129)
+  + Enhancements to Quick Search (PR #131)
+  + Support Exchange Event Invites with ICS Attachment (PR #133, #136)
+  + Reduce config.json writes via redundancy checking (PR #134, #141)
+  + Make the OSX menu look like the ones in Linux/Windows (PR #138)
+  + Allow Anonymous IMAP/SMTP Relays (PR #139)
+  + Remove the Addition/Removal of the Nylas Debian Repo (PR #140)
+  + Fixes color mishap with default theme (PR #142)
+  + Enable Mail Merge (PR #144)
+  + Fix/Enhance URL Parsing (PR #145, #149)
+
+### 2.2.1 (10/16/2017)
+
+  + Fix extracting multipart/alternative parts (Issue #72)
+  + Fix encoding and decoding of attachment filenames (Issues #10, #41, #91)
+  + Enable Gmail IMAP configuration (Issue #89)
+  + Correctly parse multiple CCs/BCCs in mailto links (Issue nylas/nylas-mail#3635)
+  + Fix signature editor to take full width and height (Issue #105)
+  + Fix missing shortcuts in the application menu (Issue nylas/nylas-mail#2305)
+  + Update menu button/bar (PRs #111 and #116, Issue #112)
+  + Help button now points to NML-hosted documentation (PR #118)
+  + Disable crash reports (Issue #117)
+
 ### 2.2.0 (9/14/2017)
 
   + Merge complete code dump from Nylas with 2.1.0 (Issue #69)

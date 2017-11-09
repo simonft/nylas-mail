@@ -1,7 +1,7 @@
 {
   "name": "nylas-mail",
   "productName": "Rewire Mail",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "description": "The best email app for people and teams at work",
   "license": "MIT",
   "main": "./src/browser/main.js",
@@ -69,6 +69,7 @@
     "mailparser": "^0.6.1",
     "mailto-parser": "^1.0.0",
     "marked": "^0.3",
+    "md5": "2.2.1",
     "mimelib": "0.2.19",
     "mkdirp": "^0.5",
     "moment": "2.12.0",
