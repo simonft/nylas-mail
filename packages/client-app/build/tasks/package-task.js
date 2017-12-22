@@ -186,6 +186,7 @@ module.exports = (grunt) => {
           '**/src/tasks/**',
           '**/node_modules/spellchecker/**',
           '**/node_modules/windows-shortcuts/**',
+          '**/bitmask-nox/**',
         ].join(',') + "}",
       },
       "ignore": [ // These are all relative to client-app

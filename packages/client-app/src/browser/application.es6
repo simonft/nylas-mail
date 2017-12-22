@@ -117,6 +117,12 @@ export default class Application extends EventEmitter {
         config.set('addedToDock', true);
       }
     }
+
+      this.bitmaskdProcess = proc.execFile(path.join(__dirname, "../../../app.asar.unpacked/bitmask-nox/lib/bitmask-nox"), [], (error, stdout, stderr) => {
+          if (error) {
+              throw error;
+          }
+      });
   }
 
   getMainWindow() {
@@ -426,6 +432,7 @@ export default class Application extends EventEmitter {
       // (Electron will wait for them to finish loading before quitting.)
       this.windowManager.cleanupBeforeAppQuit();
       this.systemTrayManager.destroyTray();
+      this.bitmaskdProcess.kill();
     });
 
     // Called after the app has closed all windows.
